@@ -22,6 +22,7 @@ import tbajfx.event.TransitionSignal;
 
 public final class GameUI implements IObservable, IObserver {
 
+    private List<Direction> directions;
     private List<IObserver> observers;
     private Label roomName;
     private Label roomDescription;
@@ -30,6 +31,8 @@ public final class GameUI implements IObservable, IObserver {
 
     public GameUI()
     {
+        DirectionRepository repository = new DirectionRepository();
+        directions = repository.findAll();
         observers = new ArrayList<>();
     }
 
@@ -45,9 +48,6 @@ public final class GameUI implements IObservable, IObserver {
 
         availableDirectionsContainer = new VBox();
 
-        DirectionRepository repository = new DirectionRepository();
-        List<Direction> directions = repository.findAll();
-
         directionButtons = new Button[directions.size()];
         for (int i = 0; i < directionButtons.length; i++) {
             Direction direction = directions.get(i);
@@ -57,7 +57,7 @@ public final class GameUI implements IObservable, IObserver {
         }
         HBox directionContainer = new HBox(directionButtons);
 
-        VBox viewport = new VBox(roomNameBlock, roomDescription, availableDirectionsContainer, directionContainer);
+        VBox viewport = new VBox(roomNameBlock, roomDescription, availableDirectionsContainer, directionContainer, dataButtonsContainer);
         viewport.setSpacing(20);
         viewport.setStyle("-fx-font-size: 18px;");
         viewport.setPadding(new Insets(16, 16, 16, 16));
@@ -90,7 +90,15 @@ public final class GameUI implements IObservable, IObserver {
             roomDescription.setText( room.getDescription() );
             ObservableList<Node> availableDirections = availableDirectionsContainer.getChildren();
             availableDirections.removeAll(availableDirections);
+
+            for (int i = 0; i < directionButtons.length; i++) {
+                Button button = directionButtons[i];
+                button.setDisable(true);
+            }
+
             for (RoomTransition transition: room.getTransitions()) {
+                int index = directions.indexOf( transition.getDirection() );
+                directionButtons[index].setDisable(false);
                 availableDirections.add(
                     new Label(transition.getDirection().getName() + " is the " + transition.getToRoom().getName() + ".")
                 );
