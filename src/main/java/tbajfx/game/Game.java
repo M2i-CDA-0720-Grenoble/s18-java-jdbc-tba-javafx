@@ -7,6 +7,8 @@ import tbajfx.db.entity.Direction;
 import tbajfx.db.entity.Room;
 import tbajfx.db.entity.RoomTransition;
 import tbajfx.db.repository.RoomTransitionRepository;
+import tbajfx.event.FileOperationSignal;
+import tbajfx.event.FileOperationType;
 import tbajfx.event.IObservable;
 import tbajfx.event.IObserver;
 import tbajfx.event.RoomChangeSignal;
@@ -66,6 +68,17 @@ public final class Game implements IObservable, IObserver {
                 Room newRoom = transition.getToRoom();
                 getState().setCurrentRoom( newRoom );
                 signal( new RoomChangeSignal(newRoom) );
+            }
+        } else if (signal instanceof FileOperationSignal) {
+            FileOperationSignal typedSignal = (FileOperationSignal)signal;
+            switch (typedSignal.getType()) {
+                case Save:
+                    state.save("test.dat");
+                    break;
+                case Load:
+                    state = GameState.load("test.dat");
+                    signal( new RoomChangeSignal(state.getCurrentRoom()) );
+                    break;
             }
         }
     }

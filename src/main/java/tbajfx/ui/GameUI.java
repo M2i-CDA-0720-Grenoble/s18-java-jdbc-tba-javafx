@@ -14,6 +14,8 @@ import tbajfx.db.entity.Direction;
 import tbajfx.db.entity.Room;
 import tbajfx.db.entity.RoomTransition;
 import tbajfx.db.repository.DirectionRepository;
+import tbajfx.event.FileOperationSignal;
+import tbajfx.event.FileOperationType;
 import tbajfx.event.IObservable;
 import tbajfx.event.IObserver;
 import tbajfx.event.RoomChangeSignal;
@@ -56,6 +58,12 @@ public final class GameUI implements IObservable, IObserver {
             directionButtons[i] = button;
         }
         HBox directionContainer = new HBox(directionButtons);
+
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> signal( new FileOperationSignal(FileOperationType.Save) ) );
+        Button loadButton = new Button("Load");
+        loadButton.setOnAction(e -> signal( new FileOperationSignal(FileOperationType.Load) ) );
+        HBox dataButtonsContainer = new HBox(saveButton, loadButton);
 
         VBox viewport = new VBox(roomNameBlock, roomDescription, availableDirectionsContainer, directionContainer, dataButtonsContainer);
         viewport.setSpacing(20);
