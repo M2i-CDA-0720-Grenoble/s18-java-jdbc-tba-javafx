@@ -1,3 +1,5 @@
+package tbajfx;
+
 /**
  * An additional Launcher class is needed to be able to start the JavaFX application from a JAR file.
  * https://stackoverflow.com/questions/53533486/how-to-open-javafx-jar-file-with-jdk-11
