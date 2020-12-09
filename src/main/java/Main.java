@@ -7,7 +7,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         // The scene which is the "root" of our application
-        Scene scene = new Scene(JavaFXExample.getHolder(), 400, 300);
+        Scene scene = new Scene(JavaFXExample.getHolder(), 400, 400);
 
         // The top level JavaJX container
         stage.setTitle("Minimal JavaFX 11 application");
